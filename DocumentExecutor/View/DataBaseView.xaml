@@ -1,0 +1,42 @@
+﻿<Window x:Class="DocumentExecutor.View.DataBaseView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DocumentExecutor.View"
+        d:DataContext="{d:DesignInstance Type=viewModel:DataManageVm}"
+        xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:viewModel="clr-namespace:DocumentExecutor.ViewModel"
+        mc:Ignorable="d"
+        Title="DataBaseView" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="0.1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Syncfusion:SfDataGrid Grid.Row="0" x:Name="ExecutorRecordsDataGrid"
+                                           AutoGenerateColumns="False"
+                                           AllowFiltering="True"
+                                           ItemsSource="{Binding AllExecutorRecords}"
+                                           SelectedItem="{Binding SelectedExecutorRecord}">
+
+            <Syncfusion:SfDataGrid.Columns>
+                <Syncfusion:GridTextColumn MappingName="Guid"/>
+            </Syncfusion:SfDataGrid.Columns>
+        </Syncfusion:SfDataGrid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- <Button HorizontalAlignment="Center" Content="{StaticResource Insert}" -->
+            <!--                     CommandParameter="{Binding ElementName=DocumentVisorWindow}" -->
+            <!--                     Command="{Binding OpenAddQueryWnd}" Margin="0,10,0,10" Width="160"/> -->
+            <!-- <Button Grid.Column="1" HorizontalAlignment="Center" Content="{StaticResource ExportToExcel}"  CommandParameter="{Binding ElementName=DocumentVisorWindow}" -->
+            <!--                     Command="{Binding ExportToExcel}" Margin="0,10,0,10" Width="160"></Button> -->
+            <!-- <Button Grid.Column="2" HorizontalAlignment="Center" Content="{StaticResource Edit}" CommandParameter="{Binding ElementName=DocumentVisorWindow}" -->
+            <!--                     Command="{Binding OpenEditItemWnd}" Margin="0,10,0,10" Width="160" ></Button> -->
+        </Grid>
+    </Grid>
+</Window>

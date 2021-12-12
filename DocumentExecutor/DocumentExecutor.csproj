@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Icons\cloud-user.png" />
+        <None Remove="Icons\gears.png" />
+        <None Remove="Icons\employees-server.png" />
+        <None Remove="settings.xaml" />
+    </ItemGroup>
+	<ItemGroup>
+        <Content Include="Icons\cloud-user.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Icons\gears.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Icons\employees-server.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+		<Content Include="settings.xaml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+    </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
+    <PackageReference Include="Syncfusion.DataGridExcelExport.Wpf" Version="19.3.0.57" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="19.3.0.57" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>

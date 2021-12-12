@@ -1,0 +1,20 @@
+﻿<Application x:Class="DocumentExecutor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:DocumentExecutor"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             StartupUri="View/LoginWindowView.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Themes -->
+                <ResourceDictionary Source="Styles/Blue.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Styles/CoreResourceDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Styles/DataWindowResourceDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Styles/UserControlResourceDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="settings.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+            <JournalEntryListConverter x:Key="TextInputToVisibilityConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
