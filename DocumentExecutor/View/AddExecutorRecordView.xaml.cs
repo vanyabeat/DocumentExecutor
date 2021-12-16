@@ -10,18 +10,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DocumentExecutor.ViewModel;
-using Syncfusion.UI.Xaml.Grid;
 
 namespace DocumentExecutor.View
 {
-    public partial class DataBaseView : Window
+    /// <summary>
+    /// Interaction logic for AddExecutorRecordView.xaml
+    /// </summary>
+    public partial class AddExecutorRecordView : Window
     {
-        public static SfDataGrid AllExecutorRecordsView;
-        public DataBaseView()
+        public static DatePicker AllOuterNumberDatePicker;
+        public AddExecutorRecordView()
         {
             InitializeComponent();
             DataContext = new DataManageVm();
-            AllExecutorRecordsView = ExecutorRecordsDataGrid;
+            AllOuterNumberDatePicker = ExecutorRecordOutputDateTimePicker;
+            DataManageVm.ExecutorRecordOutputNumberDateTime = DateTime.Now;
         }
     }
 }

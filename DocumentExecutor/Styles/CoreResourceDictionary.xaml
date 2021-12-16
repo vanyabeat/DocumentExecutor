@@ -356,8 +356,13 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver"
                                      Value="True">
-                                <Setter Property="Background"
-                                        Value="{DynamicResource NavigationBackgroundColorMouseOver}" />
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <DynamicResource>
+                                            <DynamicResource.ResourceKey>NavigationBackgroundColorMouseOver</DynamicResource.ResourceKey>
+                                        </DynamicResource>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                             <Trigger Property="IsPressed"
                                      Value="True">

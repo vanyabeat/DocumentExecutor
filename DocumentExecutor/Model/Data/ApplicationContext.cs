@@ -1,23 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace DocumentExecutor.Model.Data
 {
     public sealed class ApplicationContext : DbContext
     {
         public DbSet<ExecutorRecord> ExecutorRecords { get; set; }
-        public string DatabaseName { get; }
-        public string Host { get; }
-        public string Password { get; }
-        public string Port { get; }
-        public string User { get; }
+        public DbSet<ExecutorRecordData> ExecutorRecordDatas { get; set; }
+        public static string DatabaseName { get; set; }
+        public static string Host { get; set; }
+        public static string Password { get; set; }
+        public static string Port { get; set; }
+        public static string User { get; set; }
 
-        public ApplicationContext(string host, string database, string user, string password, string port)
+        public ApplicationContext()
         {
-            Host = host;
-            DatabaseName = database;
-            User = user;
-            Password = password;
-            Port = port;
             Database.EnsureCreated();
         }
 
@@ -28,6 +24,14 @@ namespace DocumentExecutor.Model.Data
         {
             modelBuilder.Entity<ExecutorRecord>()
                 .HasAlternateKey(c => new { c.Guid });
+
+            modelBuilder.Entity<ExecutorRecord>().HasOne(s => s.RecordData)
+                .WithMany()
+                .HasForeignKey(e => e.RecordDataId);
+
+            modelBuilder.Entity<ExecutorRecordData>().HasOne(s => s.ExecutorRecord)
+                .WithMany()
+                .HasForeignKey(e => e.RecordGuid);
         }
 
     }

@@ -1,0 +1,45 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--BEGIN GUI STRING-->
+    <system:String x:Key="ApplicationName">DocumentVisor</system:String>
+    <system:String x:Key="Queries">Queries</system:String>
+    <system:String x:Key="Persons">Persons</system:String>
+    <system:String x:Key="PersonTypes">Person Types</system:String>
+    <system:String x:Key="Themes">Themes</system:String>
+    <system:String x:Key="Divisions">Divisions</system:String>
+    <system:String x:Key="Privacies">Privacies</system:String>
+    <system:String x:Key="QueryTypes">Types</system:String>
+    <system:String x:Key="Articles">Articles</system:String>
+    <system:String x:Key="Action">Action</system:String>
+    <system:String x:Key="IdentifierType">Identifier Type</system:String>
+    <system:String x:Key="Insert">Insert</system:String>
+    <system:String x:Key="Delete">Delete</system:String>
+    <system:String x:Key="Edit">Edit</system:String>
+    <system:String x:Key="Complete">Complete</system:String>
+    <system:String x:Key="Folder">📁</system:String>
+    <system:String x:Key="SelectTab">Select Tab in upper menu</system:String>
+    <system:String x:Key="ObjectNotFound">Object not found</system:String>
+    <system:String x:Key="Response">Response</system:String>
+    <system:String x:Key="Add">Add</system:String>
+    <system:String x:Key="InsertToBox">✅</system:String>
+    <system:String x:Key="DeleteToBox">❌</system:String>
+    <system:String x:Key="EmptyLogo">❌</system:String>
+    <system:String x:Key="PleaseSelectNeedleItem">Please Select Needle Item</system:String>
+    <system:String x:Key="ExportToExcel">Export to excel</system:String>
+    <system:String x:Key="Reports">Reports</system:String>
+    <system:String x:Key="Export">Export</system:String>
+    <system:String x:Key="ExecutorRecordAddWindow">Executor Record Add Window</system:String>
+    <system:String x:Key="ExecutorRecordGuid">Guid</system:String>
+    <system:String x:Key="ExecutorRecordInfo">Info</system:String>
+    <system:String x:Key="ExecutorOutputDate">Output date</system:String>
+    <system:String x:Key="ExecutorRecordOutputNumber">Output Number</system:String>
+    <system:String x:Key="ExecutorRecordOutputDivision">Output Division</system:String>
+    <system:String x:Key="ExecutorRecordDivision">Division</system:String>
+    <system:String x:Key="ExecutorRecordNumber">Number</system:String>
+    <system:String x:Key="ExecutorRecordNumberDateTime">Number DateTime</system:String>
+    <system:String x:Key="ExecutorRecordEmpty">Empty</system:String>
+    <system:String x:Key="ExecutorRecordHasCd">Has CD</system:String>
+    <!--END GUI STRING-->
+</ResourceDictionary>

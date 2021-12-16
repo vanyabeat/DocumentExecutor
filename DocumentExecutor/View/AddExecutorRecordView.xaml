@@ -1,0 +1,131 @@
+﻿<Window x:Class="DocumentExecutor.View.AddExecutorRecordView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel1="clr-namespace:DocumentExecutor.ViewModel"
+        xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
+        xmlns:busyIndicator="https://github.com/Peoky/BusyIndicator"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        x:Name="AddExecudorRecordWnd" 
+        mc:Ignorable="d"
+        Height="500" Width="1280"
+        d:DataContext="{d:DesignInstance Type=viewModel1:DataManageVm}" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="/Resources/StringResource.xaml" />
+            
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Title>
+        <StaticResource ResourceKey="ExecutorRecordAddWindow" />
+    </Window.Title>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="{StaticResource ExecutorRecordGuid}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Name="ExecutorRecordGuidTextBox"
+                     Text="{Binding ExecutorRecordGuid}" />
+
+            <Label Grid.Column="0" Grid.Row="1" Content="{StaticResource ExecutorRecordInfo}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Name="ExecutorRecordInfoTextBox"
+                     Text="{Binding ExecutorRecordInfo}" />
+            <Label Grid.Column="0" Grid.Row="2" Content="{StaticResource ExecutorOutputDate}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <DatePicker Grid.Row="2" Grid.Column="1" Name="ExecutorRecordOutputDateTimePicker" SelectedDate="{Binding ExecutorRecordOutputNumberDateTime }"/>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="{StaticResource ExecutorRecordOutputNumber}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Name="ExecutorRecordNumberTextBox"
+                     Text="{Binding ExecutorRecordOutputNumber}" />
+            <Label Grid.Column="0" Grid.Row="1" Content="{StaticResource ExecutorRecordOutputDivision}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" Name="QuerySignPersonComboBox" ItemsSource="{Binding AllDivisions}"
+                      DisplayMemberPath="Name" SelectedItem="{Binding ExecutorRecordOutputDivision}"  />
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{StaticResource Add}" Command="{Binding AddNewExecutorRecord}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                    HorizontalAlignment="Center" Margin="10,0,0,10" Width="300" />
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Grid.Row="1" Content="{StaticResource ExecutorRecordEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Grid.Column="0" Grid.Row="0" Content="{StaticResource ExecutorRecordHasCd}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <toggleSwitch:HorizontalToggleSwitch CheckedContent="{StaticResource InsertToBox}" UncheckedContent="{StaticResource EmptyLogo}" IsChecked="{Binding ExecutorRecordEmpty, Mode=TwoWay}" x:Name="ToggleIsEmpty"   Grid.Row="1" Grid.Column="1" />
+                    <toggleSwitch:HorizontalToggleSwitch CheckedContent="{StaticResource InsertToBox}" UncheckedContent="{StaticResource EmptyLogo}" IsChecked="{Binding ExecutorRecordHasCd, Mode=TwoWay}" x:Name="ToggleIsCd"   Grid.Row="0" Grid.Column="1" />
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Row="1" Column="1" Name="PathGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Column="1" Name="ExecutorRecordBlobDataPathFolder" IsReadOnly="True"
+                     Text="{Binding ExecutorRecordBlobDataPathFolder}" />
+            <Button Grid.Column="0" Content="{StaticResource Folder}" Command="{Binding SelectBlobZipFolder}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                    HorizontalAlignment="Center"/>
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Minimum="0" Maximum="100" Name="ProgressBar" IsEnabled="False"  />
+        </Grid>
+    </Grid>
+
+
+</Window>

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using DocumentExecutor.Model.Data;
 
 namespace DocumentExecutor
 {
@@ -13,5 +14,6 @@ namespace DocumentExecutor
     /// </summary>
     public partial class App : Application
     {
+        public static StaticData StaticDataContext { get; set; }
     }
 }
