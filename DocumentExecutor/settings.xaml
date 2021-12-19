@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 	<system:String x:Key="User">user1</system:String>
 	<system:String x:Key="Password">Password1!</system:String>
-	<system:String x:Key="Host">172.26.70.176</system:String>
+	<system:String x:Key="Host">172.18.161.90</system:String>
 	<system:String x:Key="Port">5432</system:String>
 	<system:String x:Key="DataBase">user1_data</system:String>
     <system:String x:Key="PathDataTypes">C:\Users\developer\Desktop\data_types.json</system:String>

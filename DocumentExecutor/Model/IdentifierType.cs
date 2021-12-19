@@ -8,7 +8,7 @@ namespace DocumentExecutor.Model
 
         public override string ToString()
         {
-            return $"{Name}\n({Info})";
+            return $"({Name})";
         }
 
         public object ToObject()

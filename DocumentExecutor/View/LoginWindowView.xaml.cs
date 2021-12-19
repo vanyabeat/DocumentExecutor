@@ -51,5 +51,10 @@ namespace DocumentExecutor.View
             Left = Left + e.HorizontalChange;
             Top = Top + e.VerticalChange;
         }
+
+        private void PasswordChangedHandler(object sender, RoutedEventArgs e)
+        {
+            DataManageVm.SelectedPassword = PasswordBox.Password;
+        }
     }
 }

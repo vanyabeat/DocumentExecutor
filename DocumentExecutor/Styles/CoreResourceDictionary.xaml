@@ -327,7 +327,7 @@
             <Setter Property="MinHeight"
                     Value="28" />
             <Setter Property="MinWidth"
-                    Value="100" />
+                    Value="10" />
             <Setter Property="Background"
                     Value="{DynamicResource ThemeColorBrush}"></Setter>
             <Setter Property="HorizontalAlignment"

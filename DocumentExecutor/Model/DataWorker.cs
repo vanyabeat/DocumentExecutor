@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using DocumentExecutor.Model.Data;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.XlsIO.Parser.Biff_Records;
 
 namespace DocumentExecutor.Model
 {
@@ -19,14 +21,14 @@ namespace DocumentExecutor.Model
 
         #region ExecutorRecords
 
-        public static string CreateExecutorRecord(string guid, string info, Division division, DateTime outputDateTime, string outputNumber, bool empty, bool cd, string host, string database, string user, string password, string port)
+        public static string CreateExecutorRecord(string guid, string info, Division division, DateTime outputDateTime, string outputNumber, bool empty, bool cd, string jsonIds)
         {
             var result = "";
             using var db = new ApplicationContext();
             var checkIsExist = db.ExecutorRecords.Any(el => el.Guid == guid);
             if (!checkIsExist)
             {
-                db.ExecutorRecords.Add(new ExecutorRecord { Guid = guid, Info = info, RecordDataId = null, OutputDivision = division, OutputNumberDateTime = outputDateTime, OutputNumber = outputNumber, Empty = empty, IsCd = cd});
+                db.ExecutorRecords.Add(new ExecutorRecord { Guid = guid, Info = info, RecordDataId = null, OutputDivision = division, OutputNumberDateTime = outputDateTime, OutputNumber = outputNumber, Empty = empty, IsCd = cd, IdentifiersJson = jsonIds});
                 db.SaveChanges();
                 result = guid;
             }
@@ -34,7 +36,26 @@ namespace DocumentExecutor.Model
             return result;
         }
 
-        public static int CreateExecutorRecordData(string guid, uint size, byte[] data, string host, string database, string user, string password, string port)
+
+        public static string EditExecutorRecord(string guid, string info, Division division, DateTime outputDateTime, string outputNumber, bool empty, bool cd, string jsonIds)
+        {
+            using (var db = new ApplicationContext())
+            {
+                var item = db.ExecutorRecords.FirstOrDefault(d => d.Guid == guid);
+                item.Info = info;
+                item.OutputDivision = division;
+                item.OutputNumberDateTime = outputDateTime;
+                item.OutputNumber = outputNumber;
+                item.Empty = empty;
+                item.IsCd = cd;
+                item.IdentifiersJson = jsonIds;
+                db.SaveChanges();
+            }
+
+            return guid;
+        }
+
+        public static int CreateExecutorRecordData(string guid, uint size, byte[] data)
         {
             var result = -1;
             using var db = new ApplicationContext();
@@ -49,6 +70,56 @@ namespace DocumentExecutor.Model
             return result;
         }
 
+        public static void DeleteExecutorRecordData(string guidRecord)
+        {
+            using var db = new ApplicationContext();
+            try
+            {
+                var r = db.ExecutorRecordDatas.Any(r => r.RecordGuid == guidRecord);
+                if (!r) return;
+                {
+                    db.ExecutorRecordDatas.Remove(db.ExecutorRecordDatas.FirstOrDefault(p => p.RecordGuid == guidRecord)!);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+        }
+
+        public static void DeleteExecutorRecord(ExecutorRecord rec)
+        {
+            using var db = new ApplicationContext();
+            try
+            {
+                var checkIsExist = db.ExecutorRecords.Any(el => el.Guid == rec.Guid);
+                if (checkIsExist)
+                {
+                    db.ExecutorRecords.Remove(rec);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+        }
+
+        public static byte[] GetExecutorRecordData(string guid)
+        {
+            using var db = new ApplicationContext();
+            try
+            {
+                var checkIsExist = db.ExecutorRecordDatas.Any(el => el.RecordGuid == guid);
+                return checkIsExist ? db.ExecutorRecordDatas.FirstOrDefault(x => x.RecordGuid == guid)?.Data : new byte[1];
+            }
+            catch (Exception e)
+            {
+                return new byte[1];
+            }
+        }
+
         public static void LinkRecordData(string guid, int dataId, string host, string database, string user, string password, string port)
         {
             using var db = new ApplicationContext();
@@ -59,7 +130,7 @@ namespace DocumentExecutor.Model
             db.SaveChanges();
         }
 
-        public static uint GetExecutorRecordSizeById(int id, string host, string database, string user, string password, string port)
+        public static uint GetExecutorRecordSizeById(int id)
         {
             using (var db = new ApplicationContext())
             {

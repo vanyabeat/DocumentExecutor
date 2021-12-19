@@ -1,16 +1,15 @@
-﻿<Window x:Class="DocumentExecutor.View.AddExecutorRecordView"
+﻿<Window x:Class="DocumentExecutor.View.EditExecutorRecordView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModel1="clr-namespace:DocumentExecutor.ViewModel"
+        xmlns:local="clr-namespace:DocumentExecutor.View"
+        xmlns:viewModel="clr-namespace:DocumentExecutor.ViewModel"
         xmlns:toggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
-        xmlns:busyIndicator="https://github.com/Peoky/BusyIndicator"
-        xmlns:system="clr-namespace:System;assembly=System.Runtime"
-        x:Name="AddExecudorRecordWnd" 
+        x:Name="EditExecudorRecordWnd" 
         mc:Ignorable="d"
         Height="350" Width="1000"
-        d:DataContext="{d:DesignInstance Type=viewModel1:DataManageVm}" ResizeMode="NoResize">
+        d:DataContext="{d:DesignInstance Type=viewModel:DataManageVm}" ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -49,7 +48,7 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" Content="{StaticResource ExecutorRecordGuid}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Name="ExecutorRecordGuidTextBox"
+            <TextBox Grid.Row="0" Grid.Column="1" Name="ExecutorRecordGuidTextBox" IsReadOnly="True" IsReadOnlyCaretVisible="True"
                      Text="{Binding ExecutorRecordGuid}" Margin="0,5,0,5" />
 
             <Label Grid.Column="0" Grid.Row="1" Content="{StaticResource ExecutorRecordInfo}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -80,16 +79,19 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{StaticResource Add}" Command="{Binding AddNewExecutorRecord}"
+            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{StaticResource Edit}" Command="{Binding EditExecutorRecord}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                     HorizontalAlignment="Center" Margin="10,0,0,10" Width="300" />
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Button Content="{StaticResource Download}" Command="{Binding DownloadDataCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Width="84" Margin="249,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="32"/>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid>
@@ -120,7 +122,7 @@
             </Grid.RowDefinitions>
             <TextBox Name="ExecutorRecordBlobDataPathFolder" IsReadOnly="True"
                      Text="{Binding ExecutorRecordBlobDataPathFolder}" Grid.ColumnSpan="2" Margin="83,10,0,10" />
-            <Button Content="{StaticResource Folder}" Command="{Binding SelectBlobZipFolder}"
+            <Button Content="{StaticResource Folder}" Command="{Binding SelectBlobZipFolderEdit}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Width="63" Height="36"/>
             <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Minimum="0" Maximum="100" Name="ProgressBar" IsEnabled="False" Margin="83,5,0,27"  />
         </Grid>
@@ -148,13 +150,12 @@
                      Text="{Binding ExecutorRecordCurrentIdentifier}" Margin="10,0,0,79" />
             <ComboBox Grid.Row="0" Name="ExecutorRecordIdentifierTypeComboBox" ItemsSource="{Binding AllIdentifierTypes}"
                       DisplayMemberPath="Name" SelectedItem="{Binding ExecutorRecordCurrentIdentifierType}" VerticalAlignment="Top" Margin="5,0,10,0" Grid.Column="1" Height="32"  />
-            <Button Content="{StaticResource InsertToBox}" Command="{Binding AddExecutorRecordIdentifier}"
+            <Button Content="{StaticResource InsertToBox}" Command="{Binding AddExecutorRecordIdentifierEdit}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
                     Grid.Column="1" VerticalAlignment="Top" Height="32" Width="19" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="103,0,0,0" />
-            <Button Content="{StaticResource DeleteToBox}" Command="{Binding DeleteExecutorRecordIdentifier}"
+            <Button Content="{StaticResource DeleteToBox}" Command="{Binding DeleteExecutorRecordIdentifierEdit}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
                     Grid.Column="2" HorizontalAlignment="Left" Margin="19,0,0,0" VerticalAlignment="Top" Height="32" Width="18" Grid.ColumnSpan="2" />
         </Grid>
     </Grid>
 </Window>
- 

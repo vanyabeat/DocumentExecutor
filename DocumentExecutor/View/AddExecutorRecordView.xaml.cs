@@ -19,11 +19,13 @@ namespace DocumentExecutor.View
     public partial class AddExecutorRecordView : Window
     {
         public static DatePicker AllOuterNumberDatePicker;
+        public static DataGrid AllIdentifiersDataGrid;
         public AddExecutorRecordView()
         {
             InitializeComponent();
             DataContext = new DataManageVm();
             AllOuterNumberDatePicker = ExecutorRecordOutputDateTimePicker;
+            AllIdentifiersDataGrid = ExecutorRecordIdentifiersDataGrid;
             DataManageVm.ExecutorRecordOutputNumberDateTime = DateTime.Now;
         }
     }

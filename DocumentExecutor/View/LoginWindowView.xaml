@@ -90,7 +90,7 @@
                                 <TextBox Style="{StaticResource LoginTextBoxStyle}" Text="{Binding SelectedPort}" Name="PortTextBox" IsEnabled="{Binding ElementName=WindowsCredentialsCheckBox, Path=IsChecked, Converter={StaticResource ValueConverter}}" CharacterCasing="Lower" TabIndex="4" />
                             </Grid>
                             <Grid Margin="0,0,0,8">
-                                <PasswordBox Background="Transparent" HorizontalContentAlignment="Center" BorderBrush="{StaticResource MainBlackFontColor}" HorizontalAlignment="Center" VerticalContentAlignment="Center" Name="PasswordBox" Height="36" Width="220" IsEnabled="{Binding ElementName=WindowsCredentialsCheckBox, Path=IsChecked, Converter={StaticResource ValueConverter}}" TabIndex="5" />
+                                <PasswordBox Background="Transparent" HorizontalContentAlignment="Center" BorderBrush="{StaticResource MainBlackFontColor}" PasswordChanged="PasswordChangedHandler"  HorizontalAlignment="Center" VerticalContentAlignment="Center" Name="PasswordBox" Height="36" Width="220" IsEnabled="{Binding ElementName=WindowsCredentialsCheckBox, Path=IsChecked, Converter={StaticResource ValueConverter}}" TabIndex="5" />
                             </Grid>
                             <Grid Margin="0,0,0,8">
                                 <Grid.ColumnDefinitions>
@@ -103,8 +103,6 @@
                                 <Button Grid.Column="1" Name="PathButton" Content="Path" Width="100" Height="36" Margin="10,0,0,0" TabIndex="8" Command="{Binding OpenPathWindow}"
                                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" HorizontalAlignment="Left" />
                             </Grid>
-
-                            <ProgressBar x:Name="LocalMetroProgressBar" Visibility="Visible" Height="16" Margin="0,4,0,8" HorizontalAlignment="Center"  Width="220" Background="Transparent" BorderBrush="{StaticResource ThemeColorBrush}" Foreground="{DynamicResource ThemeColorBrush}" BorderThickness="1" IsIndeterminate="False"/>
 
                             <CheckBox Visibility="Visible" Name="WindowsCredentialsCheckBox" Content="Password from file" Height="26" Margin="-6,0,0,8" HorizontalAlignment="Center" IsChecked="False" VerticalAlignment="Center" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" TabIndex="7"/>
                             <Button Name="LocalLoginButton" Content="Login" Width="220" Height="36" Margin="0,0,0,32" TabIndex="8" Command="{Binding OpenDataBaseWindow}"

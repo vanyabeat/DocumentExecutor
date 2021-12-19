@@ -14,7 +14,11 @@ namespace DocumentExecutor.Model.Data
 
         public ApplicationContext()
         {
-            Database.EnsureCreated();
+            if (Database.CanConnect())
+            {
+                Database.EnsureCreated();
+            }
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,9 +29,9 @@ namespace DocumentExecutor.Model.Data
             modelBuilder.Entity<ExecutorRecord>()
                 .HasAlternateKey(c => new { c.Guid });
 
-            modelBuilder.Entity<ExecutorRecord>().HasOne(s => s.RecordData)
-                .WithMany()
-                .HasForeignKey(e => e.RecordDataId);
+            //modelBuilder.Entity<ExecutorRecord>().HasOne(s => s.RecordData)
+            //    .WithMany()
+            //    .HasForeignKey(e => e.RecordDataId);
 
             modelBuilder.Entity<ExecutorRecordData>().HasOne(s => s.ExecutorRecord)
                 .WithMany()

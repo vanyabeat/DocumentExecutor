@@ -36,6 +36,7 @@
                 <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordNumber}" MappingName="OutputNumber"/>
                 <Syncfusion:GridDateTimeColumn HeaderText="{StaticResource ExecutorRecordNumberDateTime}" MappingName="OutputNumberDateTime"/>
                 <Syncfusion:GridCheckBoxColumn HeaderText="{StaticResource ExecutorRecordEmpty}" MappingName="Empty"/>
+                <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordDataBytes}" MappingName="RecordDataSize"/>
                 <Syncfusion:GridCheckBoxColumn HeaderText="{StaticResource ExecutorRecordHasCd}" MappingName="IsCd"/>
             </Syncfusion:SfDataGrid.Columns>
         </Syncfusion:SfDataGrid>
@@ -48,10 +49,10 @@
             <Button HorizontalAlignment="Center" Content="{StaticResource Insert}"
                                 CommandParameter="{Binding ElementName=AddExecutorWindow}"
                                 Command="{Binding OpenAddExecutorRecordWnd}" Margin="0,10,0,10" Width="160"/>
-            <!-- <Button Grid.Column="1" HorizontalAlignment="Center" Content="{StaticResource ExportToExcel}"  CommandParameter="{Binding ElementName=DocumentVisorWindow}" -->
-            <!--                     Command="{Binding ExportToExcel}" Margin="0,10,0,10" Width="160"></Button> -->
-            <!-- <Button Grid.Column="2" HorizontalAlignment="Center" Content="{StaticResource Edit}" CommandParameter="{Binding ElementName=DocumentVisorWindow}" -->
-            <!--                     Command="{Binding OpenEditItemWnd}" Margin="0,10,0,10" Width="160" ></Button> -->
+            <Button Grid.Column="1" HorizontalAlignment="Center" Content="{StaticResource Edit}"  CommandParameter="{Binding ElementName=AddExecutorWindow}" 
+                                 Command="{Binding OpenEditExecutorRecordWnd}" Margin="0,10,0,10" Width="160"></Button>
+            <Button Grid.Column="2" HorizontalAlignment="Center" Content="{StaticResource Delete}" CommandParameter="{Binding ElementName=AddExecutorWindow}" 
+                                 Command="{Binding DeleteExecutorRecord}" Margin="0,10,0,10" Width="160" ></Button> 
         </Grid>
     </Grid>
 </Window>

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +20,7 @@ using DocumentVisor.Infrastructure;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using Newtonsoft.Json;
 
 namespace DocumentExecutor.ViewModel
 {
@@ -27,7 +30,10 @@ namespace DocumentExecutor.ViewModel
 		{
 			Source = new Uri(@"pack://application:,,,/settings.xaml")
 		};
-
+        private static readonly ResourceDictionary Dictionary = new ResourceDictionary()
+        {
+            Source = new Uri(@"pack://application:,,,/Resources/StringResource.xaml")
+        };
 
 		#region DataBase
 
@@ -55,10 +61,21 @@ namespace DocumentExecutor.ViewModel
 		public static bool ExecutorRecordEmpty { get; set; }
 		public static string ExecutorRecordBlobDataPathFolder { get; set; }
 		public static bool ExecutorRecordHasCd { get; set; }
-
-		private readonly AsyncRelayCommand<object> _addNewExecutorRecord = null;
-
-		public AsyncRelayCommand<object> AddNewExecutorRecord
+        public string ExecutorRecordCurrentIdentifier { get; set; }
+        public IdentifierType ExecutorRecordCurrentIdentifierType { get; set; }
+		public static Identifier SelectedIdentifier { get; set; }
+        private SortedSet<Identifier> _executorRecordsIdentifiers;
+        public SortedSet<Identifier> ExecutorRecordsIdentifiers
+		{
+            get => _executorRecordsIdentifiers;
+            set
+            {
+                _executorRecordsIdentifiers = value;
+                OnPropertyChanged(nameof(ExecutorRecordsIdentifiers));
+            }
+        }
+        private readonly AsyncRelayCommand<object> _addNewExecutorRecord = null;
+        public AsyncRelayCommand<object> AddNewExecutorRecord
 		{
 			get
 			{
@@ -66,11 +83,12 @@ namespace DocumentExecutor.ViewModel
 					{
 						var wnd = obj as AddExecutorRecordView;
 
-						if (ExecutorRecordGuid == null || ExecutorRecordGuid.Replace(" ", "").Length == 0)
+						if (ExecutorRecordGuid == null || ExecutorRecordGuid.Replace(" ", "").Length == 0 || ExecutorRecordInfo == null || ExecutorRecordOutputDivision == null)
 						{
 							SetRedBlockControl(wnd, "ExecutorRecordGuidTextBox");
-							// ShowMessageToUser(Dictionary["ArticleNameNeedToSelect"].ToString());
-						}
+                            SetRedBlockControl(wnd, "ExecutorRecordInfoTextBox");
+                            SetRedBlockControl(wnd, "ExecutorRecordOutputDivision");
+                        }
 						else
 						{
 							byte[] data = null;
@@ -82,34 +100,99 @@ namespace DocumentExecutor.ViewModel
 							}
 
 							wnd.ProgressBar.IsIndeterminate = false;
+                            var jsonIds = ExecutorRecordsIdentifiers != null ? JsonConvert.SerializeObject(ExecutorRecordsIdentifiers) : null;
+							var result = DataWorker.CreateExecutorRecord(ExecutorRecordGuid, ExecutorRecordInfo, ExecutorRecordOutputDivision, ExecutorRecordOutputNumberDateTime, ExecutorRecordOutputNumber, ExecutorRecordEmpty, ExecutorRecordHasCd, jsonIds);
+                            if (result != null)
+                            {
+                                if (data != null && data.Length > 0)
+                                {
+                                    var recordData = DataWorker.CreateExecutorRecordData(result, (uint)data.Length, data);
+                                    if (recordData > 0)
+                                    {
+                                        DataWorker.LinkRecordData(result, recordData, SelectedHost, SelectedDatabase, SelectedUserName, SelectedPassword, SelectedPort);
+                                    }
+                                }
 
-							var result = DataWorker.CreateExecutorRecord(ExecutorRecordGuid, ExecutorRecordInfo, ExecutorRecordOutputDivision, ExecutorRecordOutputNumberDateTime, ExecutorRecordOutputNumber, ExecutorRecordEmpty, ExecutorRecordHasCd, SelectedHost, SelectedDatabase, SelectedUserName, SelectedPassword, SelectedPort );
-							if (data != null && data.Length > 0)
-							{
-								var recordData = DataWorker.CreateExecutorRecordData(result, (uint) data.Length, data, SelectedHost,
-									SelectedDatabase, SelectedUserName, SelectedPassword, SelectedPort);
-								if (recordData > 0)
-								{
-									DataWorker.LinkRecordData(result, recordData , SelectedHost, SelectedDatabase, SelectedUserName, SelectedPassword, SelectedPort);
-								}
+                                UpdateAllDataView();
+                                SetNullValuesToProperties();
+                                // ClearStackPanelArticlesView(wnd);
+                                ShowMessageToUser(result);
 							}
-							UpdateAllDataView();
-							SetNullValuesToProperties();
-							// ClearStackPanelArticlesView(wnd);
-							ShowMessageToUser(result);
+                            else
+                            {
+								ShowMessageToUser(Dictionary["Exists"].ToString());
+                            }
+						
 							wnd.Close();
 						}
 					}
 				);
 			}
 		}
-		
+
+		private readonly AsyncRelayCommand<object> _editExecutorRecord = null;
+		public AsyncRelayCommand<object> EditExecutorRecord
+		{
+			get
+			{
+				return _editExecutorRecord ?? new AsyncRelayCommand<object>(async obj =>
+				{
+					var wnd = obj as EditExecutorRecordView;
+
+					if (ExecutorRecordGuid == null || ExecutorRecordGuid.Replace(" ", "").Length == 0 || ExecutorRecordInfo == null || ExecutorRecordOutputDivision == null)
+					{
+						SetRedBlockControl(wnd, "ExecutorRecordGuidTextBox");
+						SetRedBlockControl(wnd, "ExecutorRecordInfoTextBox");
+						SetRedBlockControl(wnd, "ExecutorRecordOutputDivision");
+					}
+					else
+					{
+						byte[] data = null;
+
+						wnd.ProgressBar.IsIndeterminate = true;
+						if (ExecutorRecordBlobDataPathFolder != null)
+						{
+							data = await GetZipBytesFromFolder(ExecutorRecordBlobDataPathFolder);
+							DataWorker.DeleteExecutorRecordData(ExecutorRecordGuid);
+						}
+
+						wnd.ProgressBar.IsIndeterminate = false;
+						var jsonIds = ExecutorRecordsIdentifiers != null ? JsonConvert.SerializeObject(ExecutorRecordsIdentifiers) : null;
+						var result = DataWorker.EditExecutorRecord(ExecutorRecordGuid, ExecutorRecordInfo, ExecutorRecordOutputDivision, ExecutorRecordOutputNumberDateTime, ExecutorRecordOutputNumber, ExecutorRecordEmpty, ExecutorRecordHasCd, jsonIds);
+						if (result != null)
+						{
+							if (data != null && data.Length > 0)
+							{
+								var recordData = DataWorker.CreateExecutorRecordData(result, (uint)data.Length, data);
+								if (recordData > 0)
+								{
+									DataWorker.LinkRecordData(result, recordData, SelectedHost, SelectedDatabase, SelectedUserName, SelectedPassword, SelectedPort);
+								}
+							}
+
+							UpdateAllDataView();
+							SetNullValuesToProperties();
+							// ClearStackPanelArticlesView(wnd);
+							ShowMessageToUser(result);
+						}
+						else
+						{
+							ShowMessageToUser(Dictionary["Exists"].ToString());
+						}
+
+						wnd.Close();
+					}
+				}
+				);
+			}
+		}
+
 		private readonly AsyncRelayCommand<object> _selectBlobZipFolder = null;
 		public AsyncRelayCommand<object> SelectBlobZipFolder
 		{
 			get
 			{
-				return _selectBlobZipFolder ?? new AsyncRelayCommand<object>(async obj =>
+				return _selectBlobZipFolder ?? new AsyncRelayCommand<object>(obj =>
 					{
 						var wnd = obj as AddExecutorRecordView;
 						var dialog = new CommonOpenFileDialog
@@ -117,19 +200,40 @@ namespace DocumentExecutor.ViewModel
 							IsFolderPicker = true
 						};
 						var result = dialog.ShowDialog();
-						if (result != CommonFileDialogResult.Ok) return;
+						if (result != CommonFileDialogResult.Ok) return Task.CompletedTask;
 						ExecutorRecordBlobDataPathFolder = Path.GetFullPath(dialog.FileName);
 						if (wnd != null)
 							((wnd.FindName("ExecutorRecordBlobDataPathFolder") as TextBox)!).Text =
 								Path.GetFullPath(dialog.FileName);
-						return;
+						return Task.CompletedTask;
 					}
-				)
-				{
-
-				};
+				);
 			}
 		}
+
+        private readonly AsyncRelayCommand<object> _selectBlobZipFolderEdit = null;
+        public AsyncRelayCommand<object> SelectBlobZipFolderEdit
+        {
+            get
+            {
+                return _selectBlobZipFolderEdit ?? new AsyncRelayCommand<object>(obj =>
+                    {
+                        var wnd = obj as EditExecutorRecordView;
+                        var dialog = new CommonOpenFileDialog
+                        {
+                            IsFolderPicker = true
+                        };
+                        var result = dialog.ShowDialog();
+                        if (result != CommonFileDialogResult.Ok) return Task.CompletedTask;
+                        ExecutorRecordBlobDataPathFolder = Path.GetFullPath(dialog.FileName);
+                        if (wnd != null)
+                            ((wnd.FindName("ExecutorRecordBlobDataPathFolder") as TextBox)!).Text =
+                                Path.GetFullPath(dialog.FileName);
+                        return Task.CompletedTask;
+                    }
+                );
+            }
+        }
 		private void SetNullValuesToProperties()
 		{
 			ExecutorRecordGuid = null;
@@ -140,12 +244,11 @@ namespace DocumentExecutor.ViewModel
 			ExecutorRecordEmpty = false;
 			ExecutorRecordHasCd = false;
 			ExecutorRecordBlobDataPathFolder = null;
-
-		}
+            ExecutorRecordsIdentifiers = null;
+        }
 
 		#endregion
-
-		#region Login
+        #region Login
 
 		private readonly RelayCommand<object> _openDataBaseWindow = null;
 
@@ -157,11 +260,17 @@ namespace DocumentExecutor.ViewModel
 					{
 						var window = obj as Window;
 						App.StaticDataContext = new StaticData(SelectedPathDataTypes);
-						ApplicationContext.DatabaseName = SelectedDatabase;
+						
+                        ApplicationContext.DatabaseName = SelectedDatabase;
 						ApplicationContext.Host = SelectedHost;
 						ApplicationContext.Password = SelectedPassword;
 						ApplicationContext.Port = SelectedPort;
 						ApplicationContext.User = SelectedUserName;
+                        if (new ApplicationContext().Database.CanConnect().Equals(false))
+                        {
+                            MessageBox.Show(Dictionary["CanConnect"].ToString());
+							System.Windows.Application.Current.Shutdown();
+						}
 						var anotherWindow = new DataBaseView();
 						UpdateAllDataView();
 						SetCenterPositionAndOpenDataBaseWindow(anotherWindow);
@@ -198,8 +307,29 @@ namespace DocumentExecutor.ViewModel
 			}
 		}
 
-		#endregion
+        private readonly RelayCommand<object> _downloadDataCommand = null;
 
+        public RelayCommand<object> DownloadDataCommand
+		{
+            get
+            {
+                return _downloadDataCommand ?? new RelayCommand<object>(obj =>
+                    {
+
+                        SaveFileDialog dialog = new SaveFileDialog()
+                        {
+                            Filter = "Text Files(*.zip)|*.zip|All(*.*)|*"
+                        };
+
+                        if (dialog.ShowDialog() == true)
+                        {
+                            File.WriteAllBytes(dialog.FileName, DataWorker.GetExecutorRecordData(ExecutorRecordGuid));
+                        }
+                    }
+                );
+            }
+        }
+		#endregion
 		#region MVVM
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -211,8 +341,7 @@ namespace DocumentExecutor.ViewModel
 		}
 
 		#endregion
-
-		#region ExecutorRecords
+        #region ExecutorRecords
 
 		private ObservableCollection<ExecutorRecord> _allExecutorRecords = DataWorker.GetAllExecutorRecords();
 
@@ -228,8 +357,7 @@ namespace DocumentExecutor.ViewModel
 
 		public static ExecutorRecord SelectedExecutorRecord { get; set; }
 		#endregion
-
-		#region Divisions
+        #region Divisions
 
 		private ObservableCollection<Division> _allDivisions = DataWorker.GetAllDivisions();
 
@@ -245,8 +373,7 @@ namespace DocumentExecutor.ViewModel
 
 
 		#endregion Divisions
-
-		#region IdentifierTypes
+        #region IdentifierTypes
 
 		private ObservableCollection<IdentifierType> _allIdentifierTypes = DataWorker.GetAllIdentifierTypes();
 
@@ -282,19 +409,205 @@ namespace DocumentExecutor.ViewModel
 			SetCenterPositionAndOpen(wnd);
 		}
 
-		private readonly RelayCommand<object> _openAddQueryWnd = null;
+        private void OpenEditExecutorRecordViewMethod()
+        {
+            if (SelectedExecutorRecord != null)
+            {
+                var wnd = new EditExecutorRecordView(SelectedExecutorRecord);
+                SetCenterPositionAndOpen(wnd);
+            }
+            else
+            {
+				ShowMessageToUser(Dictionary["PleaseSelectNeedleItem"].ToString());
+            }
+        }
+
+		private RelayCommand<object> _addExecutorRecordIdentifier = null;
+
+        public RelayCommand<object> AddExecutorRecordIdentifier
+		{
+            get
+            {
+                return _addExecutorRecordIdentifier ?? new RelayCommand<object>(obj =>
+                    {
+
+                        var wnd = obj as AddExecutorRecordView;
+
+                        if (ExecutorRecordCurrentIdentifier == null || ExecutorRecordCurrentIdentifierType == null)
+                        {
+                            ShowMessageToUser(Dictionary["IdentifierNeedToSelect"].ToString());
+                        }
+                        else
+                        {
+                            ExecutorRecordsIdentifiers ??= new SortedSet<Identifier>();
+                            ExecutorRecordsIdentifiers.Add(new Identifier
+                            {
+                                Content = ExecutorRecordCurrentIdentifier,
+                                IdentifierType = ExecutorRecordCurrentIdentifierType
+                            });
+                            ExecutorRecordCurrentIdentifier = null;
+                            ExecutorRecordCurrentIdentifierType = null;
+							wnd.ExecutorRecordIdentifiersDataGrid.Items.Refresh();
+                            wnd.ExecutorRecordIdentifiersDataGrid.SelectedItem = null;
+                            wnd.ExecutorRecordIdentifierTypeComboBox.SelectedItem = null;
+                            wnd.ExecutorRecordCurrentIdentifier.Text = "";
+                        }
+                    }
+                );
+            }
+        }
+
+        private RelayCommand<object> _addExecutorRecordIdentifierEdit;
+
+        public RelayCommand<object> AddExecutorRecordIdentifierEdit
+        {
+            get
+            {
+                return _addExecutorRecordIdentifierEdit ?? new RelayCommand<object>(obj =>
+                    {
+
+                        var wnd = obj as EditExecutorRecordView;
+
+                        if (ExecutorRecordCurrentIdentifier == null || ExecutorRecordCurrentIdentifierType == null)
+                        {
+                            ShowMessageToUser(Dictionary["IdentifierNeedToSelect"].ToString());
+                        }
+                        else
+                        {
+                            ExecutorRecordsIdentifiers ??= new SortedSet<Identifier>();
+                            ExecutorRecordsIdentifiers.Add(new Identifier
+                            {
+                                Content = ExecutorRecordCurrentIdentifier,
+                                IdentifierType = ExecutorRecordCurrentIdentifierType
+                            });
+                            ExecutorRecordCurrentIdentifier = null;
+                            ExecutorRecordCurrentIdentifierType = null;
+                            wnd.ExecutorRecordIdentifiersDataGrid.Items.Refresh();
+                            wnd.ExecutorRecordIdentifiersDataGrid.SelectedItem = null;
+                            wnd.ExecutorRecordIdentifierTypeComboBox.SelectedItem = null;
+                            wnd.ExecutorRecordCurrentIdentifier.Text = "";
+                        }
+                    }
+                );
+            }
+        }
+
+		private RelayCommand<object> _deleteExecutorRecordIdentifier;
+
+        public RelayCommand<object> DeleteExecutorRecordIdentifier
+		{
+            get
+            {
+                return _deleteExecutorRecordIdentifier ?? new RelayCommand<object>(obj =>
+                    {
+
+                        var wnd = obj as AddExecutorRecordView;
+
+                        if (SelectedIdentifier == null)
+                        {
+                            ShowMessageToUser(Dictionary["IdentifierNeedToSelect"].ToString());
+                        }
+                        else
+                        {
+                            ExecutorRecordsIdentifiers.Remove(SelectedIdentifier);
+                            ExecutorRecordCurrentIdentifier = null;
+                            ExecutorRecordCurrentIdentifierType = null;
+                            wnd.ExecutorRecordIdentifiersDataGrid.Items.Refresh();
+                            wnd.ExecutorRecordIdentifiersDataGrid.SelectedItem = null;
+                            wnd.ExecutorRecordIdentifierTypeComboBox.SelectedItem = null;
+                            wnd.ExecutorRecordCurrentIdentifier.Text = "";
+                        }
+                    }
+                );
+            }
+        }
+
+        private RelayCommand<object> _deleteExecutorRecordIdentifierEdit;
+
+        public RelayCommand<object> DeleteExecutorRecordIdentifierEdit
+        {
+            get
+            {
+                return _deleteExecutorRecordIdentifierEdit ?? new RelayCommand<object>(obj =>
+                    {
+
+                        var wnd = obj as EditExecutorRecordView;
+
+                        if (SelectedIdentifier == null)
+                        {
+                            ShowMessageToUser(Dictionary["IdentifierNeedToSelect"].ToString());
+                        }
+                        else
+                        {
+							ExecutorRecordsIdentifiers.Remove(SelectedIdentifier);
+                            ExecutorRecordCurrentIdentifier = null;
+                            ExecutorRecordCurrentIdentifierType = null;
+                            wnd.ExecutorRecordIdentifiersDataGrid.Items.Refresh();
+                            wnd.ExecutorRecordIdentifiersDataGrid.SelectedItem = null;
+                            wnd.ExecutorRecordIdentifierTypeComboBox.SelectedItem = null;
+                            wnd.ExecutorRecordCurrentIdentifier.Text = "";
+						}
+                    }
+                );
+            }
+        }
+
+		private RelayCommand<object> _deleteExecutorRecord;
+
+        public RelayCommand<object> DeleteExecutorRecord
+        {
+            get
+            {
+                return _deleteExecutorRecord ?? new RelayCommand<object>(obj =>
+                    {
+
+                        var wnd = obj as AddExecutorRecordView;
+
+                        if (SelectedExecutorRecord == null)
+                        {
+                            ShowMessageToUser(Dictionary["IdentifierNeedToSelect"].ToString());
+                        }
+                        else
+                        {
+                           DataWorker.DeleteExecutorRecordData(SelectedExecutorRecord.Guid);
+                           DataWorker.DeleteExecutorRecord(SelectedExecutorRecord);
+                           UpdateAllDataView();
+                           SetNullValuesToProperties();
+						}
+                    }
+                );
+            }
+        }
+
+		private RelayCommand<object> _openAddExecutorRecordWnd = null;
 
 		public RelayCommand<object> OpenAddExecutorRecordWnd
 		{
 			get
 			{
-				return _openAddQueryWnd ?? new RelayCommand<object>(obj =>
+				return _openAddExecutorRecordWnd ?? new RelayCommand<object>(obj =>
 					{
 						OpenAddExecutorRecordViewMethod();
 					}
 				);
 			}
 		}
+
+        private RelayCommand<object> _openEditExecutorRecordWnd = null;
+
+        public RelayCommand<object> OpenEditExecutorRecordWnd
+        {
+            get
+            {
+                return _openEditExecutorRecordWnd ?? new RelayCommand<object>(obj =>
+                    {
+                        OpenEditExecutorRecordViewMethod();
+                    }
+                );
+            }
+        }
+
+
 
 		private void SetRedBlockControl(Window window, string blockName)
 		{
