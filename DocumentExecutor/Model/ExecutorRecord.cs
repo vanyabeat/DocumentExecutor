@@ -16,19 +16,8 @@ namespace DocumentExecutor.Model
         public virtual ExecutorRecordData RecordData { get; set; }
 
         [NotMapped]
-        public virtual uint RecordDataSize {
-            get
-            {
-                if (RecordDataId == null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return DataWorker.GetExecutorRecordSizeById((int) RecordDataId);
-                }
-            } }
-        
+        public virtual uint RecordDataSize => RecordDataId == null ? (uint) 0 : DataWorker.GetExecutorRecordSizeById((int) RecordDataId);
+
         public string Info { get; set; }
 
         public string OutputNumber { get; set; }
