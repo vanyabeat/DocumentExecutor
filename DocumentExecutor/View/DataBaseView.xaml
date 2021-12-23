@@ -31,6 +31,7 @@
 
             <Syncfusion:SfDataGrid.Columns>
                 <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordGuid}" MappingName="Guid"/>
+                <Syncfusion:GridCheckBoxColumn HeaderText="{StaticResource ExecutorRecordExported}" MappingName="Exported"/>
                 <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordInfo}" MappingName="Info"/>
                 <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordDivision}" MappingName="OutputDivision"/>
                 <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordNumber}" MappingName="OutputNumber"/>

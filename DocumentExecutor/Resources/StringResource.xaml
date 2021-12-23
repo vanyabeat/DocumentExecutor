@@ -43,6 +43,7 @@
     <system:String x:Key="ExecutorRecordEmpty">Empty</system:String>
     <system:String x:Key="ExecutorRecordHasCd">Has CD</system:String>
     <system:String x:Key="ExecutorRecordDataBytes">Bytes</system:String>
+    <system:String x:Key="ExecutorRecordExported">Exported</system:String>
     <system:String x:Key="Identifier">Identifier</system:String>
     <system:String x:Key="IdentifierType">Identifier Type</system:String>
     <system:String x:Key="Download">Download</system:String>

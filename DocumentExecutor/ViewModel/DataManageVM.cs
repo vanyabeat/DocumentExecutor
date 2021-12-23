@@ -122,7 +122,8 @@ namespace DocumentExecutor.ViewModel
                             {
 								ShowMessageToUser(Dictionary["Exists"].ToString());
                             }
-						
+
+                            UpdateAllExecutorRecordsView();
 							wnd.Close();
 						}
 					}
