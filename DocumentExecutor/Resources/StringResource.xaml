@@ -47,6 +47,9 @@
     <system:String x:Key="Identifier">Identifier</system:String>
     <system:String x:Key="IdentifierType">Identifier Type</system:String>
     <system:String x:Key="Download">Download</system:String>
-    <system:String x:Key="IdentifierNeedToSelect">Identifier need select</system:String> 
+    <system:String x:Key="IdentifierNeedToSelect">Identifier need select</system:String>
+    <system:String x:Key="BatchIdentifiers">📜</system:String>
+    <system:String x:Key="BatchAddWindow">Batch Identifiers Add Window</system:String>
+    <system:String x:Key="PleaseCopySomething">Please Copy Something</system:String>
     <!--END GUI STRING-->
 </ResourceDictionary>

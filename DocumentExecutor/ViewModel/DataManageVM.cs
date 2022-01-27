@@ -21,6 +21,7 @@ using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Newtonsoft.Json;
+using Syncfusion.Data.Extensions;
 
 namespace DocumentExecutor.ViewModel
 {
@@ -74,7 +75,17 @@ namespace DocumentExecutor.ViewModel
                 OnPropertyChanged(nameof(ExecutorRecordsIdentifiers));
             }
         }
-        private readonly AsyncRelayCommand<object> _addNewExecutorRecord = null;
+		private SortedSet<Identifier> _executorRecordsIdentifiersBatch;
+		public SortedSet<Identifier> ExecutorRecordsIdentifiersBatch
+		{
+			get => _executorRecordsIdentifiersBatch;
+			set
+			{
+				_executorRecordsIdentifiersBatch = value;
+				OnPropertyChanged(nameof(ExecutorRecordsIdentifiersBatch));
+			}
+		}
+		private readonly AsyncRelayCommand<object> _addNewExecutorRecord = null;
         public AsyncRelayCommand<object> AddNewExecutorRecord
 		{
 			get
@@ -330,6 +341,102 @@ namespace DocumentExecutor.ViewModel
                 );
             }
         }
+
+		private readonly RelayCommand<object> _parseClipboard = null;
+
+		public RelayCommand<object> ParseClipboard
+		{
+			get
+			{
+				return _parseClipboard ?? new RelayCommand<object>(obj =>
+				{
+                    var window = obj as AddBatchIdentifiersView;
+					string clipboardData = null;
+					if (Clipboard.ContainsText(TextDataFormat.Text))
+					{
+						clipboardData = Clipboard.GetText(TextDataFormat.Text);
+                    }
+					else if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
+                    {
+						clipboardData = Clipboard.GetText(TextDataFormat.UnicodeText);
+					}
+					else
+                    {
+						ShowMessageToUser(Dictionary["PleaseCopySomething"].ToString());
+                        return;
+                    }
+
+                    if (!string.IsNullOrEmpty(clipboardData))
+                    {
+                        var v = clipboardData.Split(new string[] { "\r\n", "\r", "\n" },
+                            StringSplitOptions.None);
+                        foreach (var str in v)
+                        {
+                            ExecutorRecordsIdentifiersBatch.Add(new Identifier{Content = str, IdentifierType = window.CurrentIdentifierType});
+                        }
+
+                        window.IdentifiersListView.ItemsSource = null;
+                        window.IdentifiersListView.ItemsSource = ExecutorRecordsIdentifiersBatch;
+                        window.IdentifiersListView.Items.Refresh();  
+                    }
+				}
+				); 
+			}
+		}
+
+
+        private readonly RelayCommand<object> _pushClipboard = null;
+
+        public RelayCommand<object> PushClipboard
+        {
+            get
+            {
+                return _pushClipboard ?? new RelayCommand<object>(obj =>
+                    {
+                        var window = obj as AddBatchIdentifiersView;
+
+                        if (ExecutorRecordsIdentifiersBatch == null)
+                        {
+							return;
+                            
+                        }
+
+                        if (ExecutorRecordsIdentifiersBatch.Count == 0)
+                        {
+							return;
+                        }
+
+                        ExecutorRecordsIdentifiers ??= new SortedSet<Identifier>();
+                        foreach (var id in ExecutorRecordsIdentifiersBatch)
+                        {
+                            ExecutorRecordsIdentifiers.Add(id);
+                        }
+
+						window.Close();
+                        var a = Application.Current.Windows;
+                        Window parent = null;
+                        foreach (var wd    in Application.Current.Windows)
+                        {
+                            if ((wd as Window)?.Name == "AddExecutorRecordWnd")
+                            {
+                                parent = wd as Window ;
+                            }
+                        }
+
+                        ((AddExecutorRecordView) parent).ExecutorRecordIdentifiersDataGrid.ItemsSource = null;
+                        ((AddExecutorRecordView)parent).ExecutorRecordIdentifiersDataGrid.ItemsSource = ExecutorRecordsIdentifiers;
+                        ((AddExecutorRecordView)parent).ExecutorRecordIdentifiersDataGrid.Items.Refresh();
+						((AddExecutorRecordView) parent).ExecutorRecordIdentifiersDataGrid.SelectedItem = null;
+                        ((AddExecutorRecordView) parent).ExecutorRecordIdentifierTypeComboBox.SelectedItem = null;
+                        ((AddExecutorRecordView) parent).ExecutorRecordCurrentIdentifier.Text = "";
+                        (((AddExecutorRecordView) parent).DataContext as DataManageVm).ExecutorRecordsIdentifiers =
+                            ExecutorRecordsIdentifiers;
+
+
+                    }
+                );
+            }
+        }
 		#endregion
 		#region MVVM
 
@@ -423,6 +530,19 @@ namespace DocumentExecutor.ViewModel
             }
         }
 
+		private void OpenEditBatchViewMethod()
+		{
+			if (ExecutorRecordCurrentIdentifierType != null)
+			{
+				var wnd = new AddBatchIdentifiersView(ExecutorRecordCurrentIdentifierType, ExecutorRecordsIdentifiers);
+				SetCenterPositionAndOpen(wnd);
+			}
+			else
+			{
+				ShowMessageToUser(Dictionary["PleaseSelectNeedleItem"].ToString());
+			}
+		}
+
 		private RelayCommand<object> _addExecutorRecordIdentifier = null;
 
         public RelayCommand<object> AddExecutorRecordIdentifier
@@ -448,6 +568,8 @@ namespace DocumentExecutor.ViewModel
                             });
                             ExecutorRecordCurrentIdentifier = null;
                             ExecutorRecordCurrentIdentifierType = null;
+                            wnd.ExecutorRecordIdentifiersDataGrid.ItemsSource = null;
+                            wnd.ExecutorRecordIdentifiersDataGrid.ItemsSource = ExecutorRecordsIdentifiers;
 							wnd.ExecutorRecordIdentifiersDataGrid.Items.Refresh();
                             wnd.ExecutorRecordIdentifiersDataGrid.SelectedItem = null;
                             wnd.ExecutorRecordIdentifierTypeComboBox.SelectedItem = null;
@@ -458,7 +580,7 @@ namespace DocumentExecutor.ViewModel
             }
         }
 
-        private RelayCommand<object> _addExecutorRecordIdentifierEdit;
+        private RelayCommand<object> _addExecutorRecordIdentifierEdit = null;
 
         public RelayCommand<object> AddExecutorRecordIdentifierEdit
         {
@@ -493,7 +615,7 @@ namespace DocumentExecutor.ViewModel
             }
         }
 
-		private RelayCommand<object> _deleteExecutorRecordIdentifier;
+		private RelayCommand<object> _deleteExecutorRecordIdentifier = null;
 
         public RelayCommand<object> DeleteExecutorRecordIdentifier
 		{
@@ -523,7 +645,7 @@ namespace DocumentExecutor.ViewModel
             }
         }
 
-        private RelayCommand<object> _deleteExecutorRecordIdentifierEdit;
+        private RelayCommand<object> _deleteExecutorRecordIdentifierEdit = null;
 
         public RelayCommand<object> DeleteExecutorRecordIdentifierEdit
         {
@@ -553,7 +675,7 @@ namespace DocumentExecutor.ViewModel
             }
         }
 
-		private RelayCommand<object> _deleteExecutorRecord;
+		private RelayCommand<object> _deleteExecutorRecord = null;
 
         public RelayCommand<object> DeleteExecutorRecord
         {
@@ -608,6 +730,20 @@ namespace DocumentExecutor.ViewModel
             }
         }
 
+		private RelayCommand<object> _openBatchWindow = null;
+
+		public RelayCommand<object> OpenBatchWindow
+		{
+			get
+			{
+				return _openBatchWindow ?? new RelayCommand<object>(obj =>
+				{
+					OpenEditBatchViewMethod();
+				}
+				);
+			}
+		}
+
 
 
 		private void SetRedBlockControl(Window window, string blockName)
@@ -634,6 +770,12 @@ namespace DocumentExecutor.ViewModel
 			AllExecutorRecords = DataWorker.GetAllExecutorRecords();
 			DataBaseView.AllExecutorRecordsView.ItemsSource = AllExecutorRecords;
 		}
+
+        private void UpdateAllExecutorView()
+        {
+            AllExecutorRecords = DataWorker.GetAllExecutorRecords();
+            DataBaseView.AllExecutorRecordsView.ItemsSource = AllExecutorRecords;
+        }
 
 		private static async Task<byte[]> GetZipBytesFromFolder(string path)
 		{

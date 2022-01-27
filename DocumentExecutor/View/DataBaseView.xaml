@@ -39,6 +39,7 @@
                 <Syncfusion:GridCheckBoxColumn HeaderText="{StaticResource ExecutorRecordEmpty}" MappingName="Empty"/>
                 <Syncfusion:GridTextColumn HeaderText="{StaticResource ExecutorRecordDataBytes}" MappingName="RecordDataSize"/>
                 <Syncfusion:GridCheckBoxColumn HeaderText="{StaticResource ExecutorRecordHasCd}" MappingName="IsCd"/>
+                <Syncfusion:GridTextColumn HeaderText="{StaticResource Identifier}" MappingName="IdentifierString"/>
             </Syncfusion:SfDataGrid.Columns>
         </Syncfusion:SfDataGrid>
         <Grid Grid.Row="1">

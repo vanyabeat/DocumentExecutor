@@ -68,5 +68,8 @@ namespace DocumentExecutor.Model
             get => IsExported == 1;
             set => IsExported = value ? 1 : 0;
         }
+
+        [NotMapped]
+        public virtual string IdentifierString => string.Join(",", DataWorker.GetExecutorRecordIdentifiers(Guid));
     }
 }

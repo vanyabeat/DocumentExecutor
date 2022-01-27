@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using DocumentExecutor.Model.Data;
+using Newtonsoft.Json;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.XlsIO.Parser.Biff_Records;
 
@@ -138,6 +139,14 @@ namespace DocumentExecutor.Model
 
                 return pos.BytesSize;
             }
+        }
+
+        public static List<Identifier> GetExecutorRecordIdentifiers(string guid)
+        {
+            using var db = new ApplicationContext();
+            return JsonConvert.DeserializeObject<List<Identifier>>(Queryable.FirstOrDefault(db.ExecutorRecords,
+                    p => p.Guid == guid)
+                ?.IdentifiersJson);
         }
         #endregion
         public static ObservableCollection<ExecutorRecord> GetAllExecutorRecords()

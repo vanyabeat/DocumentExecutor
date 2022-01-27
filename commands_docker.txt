@@ -1,3 +1,83 @@
 sudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
-
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
+wsl hostname -Isudo docker run -d --name=PostgresDocker -p 5432:5432 -e POSTGRES_PASSWORD=Password1! postgres
+docker start PostgresDocker
 wsl hostname -I

@@ -5,24 +5,12 @@ using System.Text;
 
 namespace DocumentExecutor.Model
 {
-    public class Identifier : IEquatable<Identifier>, IComparable<Identifier>
+    public sealed class Identifier : IEquatable<Identifier>, IComparable<Identifier>
     {
         public string Content { get; set; }
         public int IdentifierTypeId => IdentifierType.Id;
-        public virtual IdentifierType IdentifierType { get; set; }
+        public IdentifierType IdentifierType { get; set; }
 
-        //public int CompareTo(object? obj)
-        //{
-        //    if (obj == null)
-        //    {
-        //        return 1;
-        //    }
-        //    Identifier otherId = obj as Identifier;
-        //    if (otherId != null)
-        //        return String.Compare(this.Content, otherId.Content, StringComparison.Ordinal);
-        //    else
-        //        throw new ArgumentException("Object is not a Temperature");
-        //}
         public bool Equals(Identifier other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -36,6 +24,11 @@ namespace DocumentExecutor.Model
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((Identifier) obj);
+        }
+
+        public override string ToString()
+        {
+            return $"{Content} ({IdentifierType.Name})";
         }
 
         public override int GetHashCode()
